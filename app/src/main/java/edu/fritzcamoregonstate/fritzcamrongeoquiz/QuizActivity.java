@@ -40,9 +40,10 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast mTrueToast = Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT);
-                mTrueToast.setGravity(Gravity.TOP, 0, 200);
-                mTrueToast.show();
+//                Toast mTrueToast = Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT);
+//                mTrueToast.setGravity(Gravity.TOP, 0, 200);
+//                mTrueToast.show();
+                checkAnswer(true);
             }
         });
 
@@ -50,9 +51,10 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast mFalseToast = Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT);
-                mFalseToast.setGravity(Gravity.TOP, 0, 200);
-                mFalseToast.show();
+//                Toast mFalseToast = Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT);
+//                mFalseToast.setGravity(Gravity.TOP, 0, 200);
+//                mFalseToast.show();
+                checkAnswer(false);
             }
         });
 
@@ -70,5 +72,22 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+
+        int messageResId = 0;
+
+        if (userPressedTrue == answerIsTrue) {
+            messageResId = R.string.correct_toast;
+        }
+        else {
+            messageResId = R.string.incorrect_toast;
+        }
+
+        Toast newToast = Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT);
+        newToast.setGravity(Gravity.TOP, 0, 200);
+        newToast.show();
     }
 }
