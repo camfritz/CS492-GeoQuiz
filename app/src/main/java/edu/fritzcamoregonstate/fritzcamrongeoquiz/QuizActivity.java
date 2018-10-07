@@ -13,6 +13,9 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
 
+    //key index for saving onto the bundle
+    private static final String KEY_INDEX = "index";
+
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
@@ -32,6 +35,14 @@ public class QuizActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //check to see if a current question index is saved on the bundle, if so then retrieve the index.
+
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
+
+
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
@@ -44,9 +55,6 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast mTrueToast = Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT);
-//                mTrueToast.setGravity(Gravity.TOP, 0, 200);
-//                mTrueToast.show();
                 checkAnswer(true);
             }
         });
@@ -55,9 +63,6 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast mFalseToast = Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT);
-//                mFalseToast.setGravity(Gravity.TOP, 0, 200);
-//                mFalseToast.show();
                 checkAnswer(false);
             }
         });
@@ -71,6 +76,15 @@ public class QuizActivity extends AppCompatActivity {
             } });
 
         updateQuestion();
+    }
+
+    //override onSaveInstanceState to save the current question index onto the bundle using the static KEY_INDEX for retrieval at a later time
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
     @Override
