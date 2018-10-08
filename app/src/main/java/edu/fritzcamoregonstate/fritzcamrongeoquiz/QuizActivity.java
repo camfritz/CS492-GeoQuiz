@@ -13,8 +13,10 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
 
-    //key index for saving onto the bundle
+    //key index for saving question index, question answered status, and the answer onto the bundle
     private static final String KEY_INDEX = "index";
+    private static final String IS_ANSWERED_INDEX = "is_answered";
+    private static final String USER_ANSWER_INDEX = "user_answer";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -40,6 +42,19 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            if(savedInstanceState.getBoolean(IS_ANSWERED_INDEX) == true) {
+                mQuestionBank[mCurrentIndex].setAnswered();
+            }
+
+            mQuestionBank[mCurrentIndex].setUserAnswer(savedInstanceState.getBoolean(USER_ANSWER_INDEX));
+            if(mQuestionBank[mCurrentIndex].getIsAnswered() == true) {
+                if(mQuestionBank[mCurrentIndex].getUserAnswer() == true) {
+                    mFalseButton.setEnabled(false);
+                }
+                else {
+                    mTrueButton.setEnabled(false);
+                }
+            }
         }
 
 
@@ -78,13 +93,15 @@ public class QuizActivity extends AppCompatActivity {
         updateQuestion();
     }
 
-    //override onSaveInstanceState to save the current question index onto the bundle using the static KEY_INDEX for retrieval at a later time
+    //override onSaveInstanceState to save the current question index, question answered status, and the answer onto the bundle
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean(IS_ANSWERED_INDEX, mQuestionBank[mCurrentIndex].getIsAnswered());
+        savedInstanceState.putBoolean(USER_ANSWER_INDEX, mQuestionBank[mCurrentIndex].getUserAnswer());
     }
 
     @Override
@@ -120,6 +137,21 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+
+        //update the button views appropriately if the question has been answered previously
+
+        if(mQuestionBank[mCurrentIndex].getIsAnswered() == true) {
+            if(mQuestionBank[mCurrentIndex].getUserAnswer() == true) {
+                mFalseButton.setEnabled(false);
+            }
+            else {
+                mTrueButton.setEnabled(false);
+            }
+        }
+        else {
+            mFalseButton.setEnabled(true);
+            mTrueButton.setEnabled(true);
+        }
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -137,5 +169,18 @@ public class QuizActivity extends AppCompatActivity {
         Toast newToast = Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT);
         newToast.setGravity(Gravity.TOP, 0, 200);
         newToast.show();
+
+        //update the question answered status as answered, set user answer to the question, then update the button views appropriately
+
+        mQuestionBank[mCurrentIndex].setAnswered();
+        mQuestionBank[mCurrentIndex].setUserAnswer(userPressedTrue);
+        if(mQuestionBank[mCurrentIndex].getIsAnswered() == true) {
+            if(userPressedTrue == true) {
+                mFalseButton.setEnabled(false);
+            }
+            else {
+                mTrueButton.setEnabled(false);
+            }
+        }
     }
 }
