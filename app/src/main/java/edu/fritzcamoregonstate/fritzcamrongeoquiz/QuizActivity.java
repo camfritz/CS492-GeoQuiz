@@ -47,14 +47,6 @@ public class QuizActivity extends AppCompatActivity {
             }
 
             mQuestionBank[mCurrentIndex].setUserAnswer(savedInstanceState.getBoolean(USER_ANSWER_INDEX));
-            if(mQuestionBank[mCurrentIndex].getIsAnswered() == true) {
-                if(mQuestionBank[mCurrentIndex].getUserAnswer() == true) {
-                    mFalseButton.setEnabled(false);
-                }
-                else {
-                    mTrueButton.setEnabled(false);
-                }
-            }
         }
 
 
