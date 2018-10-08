@@ -17,6 +17,8 @@ public class QuizActivity extends AppCompatActivity {
     //key index for saving onto the bundle
     private static final String KEY_INDEX = "index";
 
+    private static final int REQUEST_CODE_CHEAT = 0;
+
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
@@ -86,7 +88,8 @@ public class QuizActivity extends AppCompatActivity {
                 //Start the CheatActivity
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
-                startActivity(intent);
+
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
 
