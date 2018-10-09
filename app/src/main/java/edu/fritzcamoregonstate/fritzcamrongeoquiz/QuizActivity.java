@@ -17,6 +17,8 @@ public class QuizActivity extends AppCompatActivity {
 
     //key index for saving onto the bundle
     private static final String KEY_INDEX = "index";
+    //key index for saving the cheat result on the bundle
+    private static final String KEY_INDEX_CHEAT = "cheat_index";
 
     private static final int REQUEST_CODE_CHEAT = 0;
 
@@ -46,6 +48,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheater = savedInstanceState.getBoolean(KEY_INDEX_CHEAT, false);
         }
 
 
@@ -102,10 +105,12 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            return; }
+            return;
+        }
         if (requestCode == REQUEST_CODE_CHEAT) {
             if (data == null) {
-                return; }
+                return;
+            }
             mIsCheater = CheatActivity.wasAnswerShown(data);
         }
     }
@@ -117,6 +122,9 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+
+        //put cheat result on bundle when instance is saved
+        savedInstanceState.putBoolean(KEY_INDEX_CHEAT, mIsCheater);
     }
 
     @Override
