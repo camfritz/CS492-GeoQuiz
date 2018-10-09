@@ -17,7 +17,15 @@ public class CheatActivity extends AppCompatActivity {
     private static final String EXTRA_ANSWER_IS_TRUE = "edu.fritzcamoregonstate.fritzcamrongeoquiz.answer_is_true";
     private static final String EXTRA_ANSWER_SHOWN = "edu.fritzcamoregonstate.fritzcamrongeoquiz.answer_shown";
 
+//    private Intent mDataIntent = new Intent();
+
+    //set key index for saving boolean value for whether the answer has been shown onto the bundle
+    private static final String KEY_ANSWER_SHOWN = "index_answer_is_shown";
+
     private boolean mAnswerIsTrue;
+
+    //boolean variable for whether the answer has been shown or not
+    private boolean mIsAnswerShown = false;
 
     private TextView mAnswerTextView;
     private Button mShowAnswerButton;
@@ -34,6 +42,14 @@ public class CheatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //if there is a saved instance state available, then retrieve the saved answer was shown value and store it as the result to be sent back to the parent
+
+        if(savedInstanceState != null) {
+            mIsAnswerShown = savedInstanceState.getBoolean(KEY_ANSWER_SHOWN);
+            setAnswerShownResult(mIsAnswerShown);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
@@ -51,7 +67,8 @@ public class CheatActivity extends AppCompatActivity {
                 else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
-                setAnswerShownResult(true);
+                mIsAnswerShown = true;
+                setAnswerShownResult(mIsAnswerShown);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     int cx = mShowAnswerButton.getWidth() / 2;
@@ -78,5 +95,11 @@ public class CheatActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
         setResult(RESULT_OK, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(KEY_ANSWER_SHOWN, mIsAnswerShown);
     }
 }
