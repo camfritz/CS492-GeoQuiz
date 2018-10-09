@@ -41,6 +41,17 @@ public class QuizActivity extends AppCompatActivity {
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
 
+    //array for saving the cheat status of all questions
+    private boolean[] mCheaterQuestions = new boolean[] {
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -80,8 +91,12 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ////mIsCheater = mCheaterQuestions[mCurrentIndex % mQuestionBank.length];
+                //mIsCheater = false;
+
+                //retrieves saved cheat value from the tracking array
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                mIsCheater = false;
+                mIsCheater = mCheaterQuestions[mCurrentIndex];
                 updateQuestion();
             } });
 
@@ -169,6 +184,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (mIsCheater) {
             messageResId = R.string.judgment_toast;
+            mCheaterQuestions[mCurrentIndex] = true;
         }
         else {
             if (userPressedTrue == answerIsTrue) {
