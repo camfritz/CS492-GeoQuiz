@@ -27,7 +27,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private TextView mCheatAttemptsTextView;
 
-    private Question[] mQuestionBank = new Question[] {
+    private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_oregon, false),
             new Question(R.string.question_oceans, true),
             new Question(R.string.question_mideast, false),
@@ -54,8 +54,9 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
 
+        //set initial cheat attempts text view
         mCheatAttemptsTextView = (TextView) findViewById(R.id.cheat_attempts_remaining);
-        mCheatAttemptsTextView.setText(R.string.cheat_attempts_3);
+        updateCheatAttemptsView();
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -84,11 +85,12 @@ public class QuizActivity extends AppCompatActivity {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 mIsCheater = false;
                 updateQuestion();
-            } });
+            }
+        });
 
         //Button listener for cheat button
 
-        mCheatButton = (Button)findViewById(R.id.cheat_button);
+        mCheatButton = (Button) findViewById(R.id.cheat_button);
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,13 +108,16 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            return; }
+            return;
+        }
         if (requestCode == REQUEST_CODE_CHEAT) {
             if (data == null) {
-                return; }
+                return;
+            }
             mIsCheater = CheatActivity.wasAnswerShown(data);
-            if(mIsCheater) {
+            if (mIsCheater) {
                 mCheatAttemptsLeft -= 1;
+                updateCheatAttemptsView();
             }
         }
     }
@@ -168,12 +173,10 @@ public class QuizActivity extends AppCompatActivity {
 
         if (mIsCheater) {
             messageResId = R.string.judgment_toast;
-        }
-        else {
+        } else {
             if (userPressedTrue == answerIsTrue) {
                 messageResId = R.string.correct_toast;
-            }
-            else {
+            } else {
                 messageResId = R.string.incorrect_toast;
             }
         }
@@ -181,5 +184,18 @@ public class QuizActivity extends AppCompatActivity {
         Toast newToast = Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT);
         newToast.setGravity(Gravity.TOP, 0, 200);
         newToast.show();
+    }
+
+    private void updateCheatAttemptsView() {
+        if (mCheatAttemptsLeft == 3) {
+            mCheatAttemptsTextView.setText(R.string.cheat_attempts_3);
+        } else if (mCheatAttemptsLeft == 2) {
+            mCheatAttemptsTextView.setText(R.string.cheat_attempts_2);
+        } else if (mCheatAttemptsLeft == 2) {
+            mCheatAttemptsTextView.setText(R.string.cheat_attempts_1);
+        } else {
+            mCheatAttemptsTextView.setText(R.string.cheat_attempts_none);
+            mCheatButton.setEnabled(false);
+        }
     }
 }
