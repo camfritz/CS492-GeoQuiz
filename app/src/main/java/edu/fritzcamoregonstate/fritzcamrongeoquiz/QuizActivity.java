@@ -17,6 +17,8 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String IS_ANSWERED_INDEX = "is_answered";
     private static final String USER_ANSWER_INDEX = "user_answer";
+    private static final String SCORE_INDEX = "score_index";
+    private static final String NUM_ANSWERED_INDEX = "num_answered_index";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -34,6 +36,8 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+    private int mScore = 0;
+    private int mNumAnswered = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,9 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mScore = savedInstanceState.getInt(SCORE_INDEX);
+            mNumAnswered = savedInstanceState.getInt(NUM_ANSWERED_INDEX);
+
             if(savedInstanceState.getBoolean(IS_ANSWERED_INDEX) == true) {
                 mQuestionBank[mCurrentIndex].setAnswered();
             }
@@ -94,6 +101,10 @@ public class QuizActivity extends AppCompatActivity {
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
         savedInstanceState.putBoolean(IS_ANSWERED_INDEX, mQuestionBank[mCurrentIndex].getIsAnswered());
         savedInstanceState.putBoolean(USER_ANSWER_INDEX, mQuestionBank[mCurrentIndex].getUserAnswer());
+        savedInstanceState.putInt(SCORE_INDEX, mScore);
+        savedInstanceState.putInt(NUM_ANSWERED_INDEX, mNumAnswered);
+
+
     }
 
     @Override
@@ -147,15 +158,30 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(boolean userPressedTrue) {
+
+        if(mNumAnswered >= mQuestionBank.length - 1) {
+            Toast newToast = Toast.makeText(this, "Your Score: " + mScore, Toast.LENGTH_LONG);
+            newToast.show();
+        }
+
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
         int messageResId = 0;
 
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
+
+            if(mNumAnswered != mQuestionBank.length) {
+                mScore += 1;
+                mNumAnswered += 1;
+            }
+
         }
         else {
             messageResId = R.string.incorrect_toast;
+            if(mNumAnswered != mQuestionBank.length) {
+                mNumAnswered += 1;
+            }
         }
 
         Toast newToast = Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT);
