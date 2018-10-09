@@ -25,6 +25,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mNextButton;
     private Button mCheatButton;
     private TextView mQuestionTextView;
+    private TextView mCheatAttemptsTextView;
 
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_oregon, false),
@@ -38,6 +39,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
+    private int mCheatAttemptsLeft = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +50,12 @@ public class QuizActivity extends AppCompatActivity {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
         }
 
-
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
+
+        mCheatAttemptsTextView = (TextView) findViewById(R.id.cheat_attempts_remaining);
+        mCheatAttemptsTextView.setText(R.string.cheat_attempts_3);
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -107,6 +111,9 @@ public class QuizActivity extends AppCompatActivity {
             if (data == null) {
                 return; }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            if(mIsCheater) {
+                mCheatAttemptsLeft -= 1;
+            }
         }
     }
 

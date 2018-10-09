@@ -50,4 +50,20 @@
         Cheating is wrong.
     </string>
 
+    <string name="cheat_attempts_3">
+        Cheat attempts remaining: 3
+    </string>
+
+    <string name="cheat_attempts_2">
+        Cheat attempts remaining: 2
+    </string>
+
+    <string name="cheat_attempts_1">
+        Cheat attempts remaining: 2
+    </string>
+
+    <string name="cheat_attempts_none">
+        Cheat attempts remaining: 0
+    </string>
+
 </resources>
