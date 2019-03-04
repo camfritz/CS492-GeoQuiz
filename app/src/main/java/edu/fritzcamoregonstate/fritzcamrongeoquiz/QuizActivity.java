@@ -18,26 +18,36 @@ public class QuizActivity extends AppCompatActivity {
     //key index for saving onto the bundle
     private static final String KEY_INDEX = "index";
 
-    private static final int REQUEST_CODE_CHEAT = 0;
 
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
-    private Button mCheatButton;
     private TextView mQuestionTextView;
 
+    private Button mButton1;
+    private Button mButton2;
+    private Button mButton3;
+    private Button mButton4;
+
     private Question[] mQuestionBank = new Question[] {
-            new Question(R.string.question_oregon, false),
-            new Question(R.string.question_oceans, true),
-            new Question(R.string.question_mideast, false),
-            new Question(R.string.question_africa, false),
-            new Question(R.string.question_americas, true),
-            new Question(R.string.question_asia, true),
-            new Question(R.string.question_north_america, true),
+            new Question(R.string.question_prevented, false),
+            new Question(R.string.question_blackout, false),
+            new Question(R.string.question_avoided, true),
+            new Question(R.string.question_cte, true),
+            new Question(R.string.question_impact, true),
+            new Question(R.string.question_concussion_number, 3, new String[]{"0 - 250", "250 - 500", "500 - 1000", "1000+"}),
+            new Question(R.string.question_recovery, 2, new String[]{"Avoiding physically demanding activities",
+                    "Avoiding the consumption of alcohol", "Staying home and having a movie marathon", "Getting plenty of sleep at night"}),
+
+            new Question(R.string.question_sign, 3, new String[] {"Loss of consciousness", "Amnesia", "Drowsiness", "None of the Above"}),
+            new Question(R.string.question_order, 2, new String[] {"Recognize, Refer, Return, Remove", "Remove, Refer, Recognize, Return",
+                    "Recognize, Remove, Refer, Return", "Refer, Remove, Recognize, Return"}),
+
+            new Question(R.string.question_america, 3, new String[] {"1.7 Million", "2.8 Million", "3.2 Million", "3.8 Million"})
+
     };
 
     private int mCurrentIndex = 0;
-    private boolean mIsCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +71,7 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkAnswer(true);
+                checkAnswer(true, -1);
             }
         });
 
@@ -69,7 +79,7 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkAnswer(false);
+                checkAnswer(false, -1);
             }
         });
 
@@ -78,36 +88,43 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                mIsCheater = false;
                 updateQuestion();
             } });
 
-        //Button listener for cheat button
-
-        mCheatButton = (Button)findViewById(R.id.cheat_button);
-        mCheatButton.setOnClickListener(new View.OnClickListener() {
+        mButton1 = (Button) findViewById(R.id.button1);
+        mButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Start the CheatActivity
-                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-                Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
-
-                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+                checkAnswer(false, 0);
             }
         });
 
-        updateQuestion();
-    }
+        mButton2 = (Button) findViewById(R.id.button2);
+        mButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswer(false, 1);
+            }
+        });
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return; }
-        if (requestCode == REQUEST_CODE_CHEAT) {
-            if (data == null) {
-                return; }
-            mIsCheater = CheatActivity.wasAnswerShown(data);
-        }
+        mButton3 = (Button) findViewById(R.id.button3);
+        mButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswer(false, 2);
+            }
+        });
+
+        mButton4 = (Button) findViewById(R.id.button4);
+        mButton4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswer(false, 3);
+            }
+        });
+
+
+        updateQuestion();
     }
 
     //override onSaveInstanceState to save the current question index onto the bundle using the static KEY_INDEX for retrieval at a later time
@@ -152,18 +169,47 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+
+        if(mCurrentIndex > 4) {
+            mTrueButton.setVisibility(View.GONE);
+            mFalseButton.setVisibility(View.GONE);
+
+            mButton1.setVisibility(View.VISIBLE);
+            mButton2.setVisibility(View.VISIBLE);
+            mButton3.setVisibility(View.VISIBLE);
+            mButton4.setVisibility(View.VISIBLE);
+
+            mButton1.setText(mQuestionBank[mCurrentIndex].getAnswerArray()[0]);
+            mButton2.setText(mQuestionBank[mCurrentIndex].getAnswerArray()[1]);
+            mButton3.setText(mQuestionBank[mCurrentIndex].getAnswerArray()[2]);
+            mButton4.setText(mQuestionBank[mCurrentIndex].getAnswerArray()[3]);
+        }
+        else {
+            mTrueButton.setVisibility(View.VISIBLE);
+            mFalseButton.setVisibility(View.VISIBLE);
+
+            mButton1.setVisibility(View.GONE);
+            mButton2.setVisibility(View.GONE);
+            mButton3.setVisibility(View.GONE);
+            mButton4.setVisibility(View.GONE);
+        }
     }
 
-    private void checkAnswer(boolean userPressedTrue) {
+    private void checkAnswer(boolean userPressedTrue, int pressedIndex) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
         int messageResId = 0;
 
-        if (mIsCheater) {
-            messageResId = R.string.judgment_toast;
+
+        if(pressedIndex == -1) {
+            if (userPressedTrue == answerIsTrue) {
+                messageResId = R.string.correct_toast;
+            } else {
+                messageResId = R.string.incorrect_toast;
+            }
         }
         else {
-            if (userPressedTrue == answerIsTrue) {
+            if(pressedIndex == mQuestionBank[mCurrentIndex].getAnswerIndex()) {
                 messageResId = R.string.correct_toast;
             }
             else {

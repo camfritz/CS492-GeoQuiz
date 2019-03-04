@@ -1,53 +1,39 @@
 <resources>
-    <string name="app_name">FritzCamronGeoQuiz</string>
+    <string name="app_name">Center Foundation</string>
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="correct_toast">Correct!</string>
     <string name="incorrect_toast">Incorrect!</string>
     <string name="next_button">Next</string>
 
-    <string name="question_oceans">The Pacific Ocean is larger than
-        the Atlantic Ocean.
+    <string name="button1">Next</string>
+    <string name="button2">Next</string>
+    <string name="button3">Next</string>
+    <string name="button4">Next</string>
+
+    <string name="question_prevented">All concussions can be prevented.
     </string>
 
-    <string name="question_mideast">The Suez Canal connects the Red Sea
-        and the Indian Ocean.
+    <string name="question_blackout">It is not a concussion if you don\'t black out.
     </string>
 
-    <string name="question_africa">
-        The source of the Nile River is in Egypt.
+    <string name="question_avoided">
+        Through proper equipment, coaching, better techniques, education, and positive sports culture; some concussions may be avoided.
     </string>
 
-    <string name="question_americas">The Amazon River is the longest river
-        in the Americas.
+    <string name="question_cte">Repeated concussions have been shown to increase the risk of developing CTE (Chronic Traumatic Encephalopathy) to an athlete.
     </string>
 
-    <string name="question_asia">Lake Baikal is the world\'s oldest and deepest
-        freshwater lake.
+    <string name="question_impact">Trying to "tough it out" with a concussions can increase the recovery time, and put you at risk for Second Impact Syndrome.
     </string>
 
-    <string name="question_oregon">
-        Portland is the capitol of Oregon.
-    </string>
+    <string name="question_concussion_number">How many concussions do Oregon high school athletes experience per year?</string>
 
-    <string name="question_north_america">
-        Crater Lake is the largest lake in North America.
-    </string>
+    <string name="question_recovery">Which of the following is not a tip for successful concussion recovery?</string>
 
-    <string name="warning_text">
-        Are you sure you want to do this?
-    </string>
+    <string name="question_sign">Which of the following is not a sign of a concussion?</string>
 
-    <string name="show_answer_button">
-        Show Answer
-    </string>
-
-    <string name="cheat_button">
-        Cheat!
-    </string>
-
-    <string name="judgment_toast">
-        Cheating is wrong.
-    </string>
+    <string name="question_order">Which of the following is the correct order for successful concussion management?</string>
+    <string name="question_america">How many concussions does the Centers for Disease Control and Prevention estimate occur in America?</string>
 
 </resources>
